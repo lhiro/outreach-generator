@@ -8,11 +8,16 @@
     "db:init": "drizzle-kit generate --name=outreach-generator",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
-    "gen:api": "ts-node scripts/gen-api.mjs"
+    "gen:api": "ts-node scripts/gen-api.mjs",
+    "gen:schema": "drizzle-zod-to-code generate --out ./schema/src/",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.22",
     "@ai-sdk/react": "^1.2.12",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^0.19.8",
     "@hookform/resolvers": "^5.1.1",
@@ -53,7 +58,7 @@
     "use-context-selector": "^2.0.0",
     "use-stick-to-bottom": "^1.1.0",
     "vaul": "^1.1.2",
-    "zod": "^3.25.64"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

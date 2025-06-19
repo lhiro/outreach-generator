@@ -7,10 +7,11 @@ import { CopyBtn } from '@/components/copy-btn'
 
 export const Message = (message: AIMessage) => {
   const { role, parts, id } = message
-  const skips = parts
-    ?.filter(part => part.type !== 'text' || (part.type === 'text' && part.text))
+  const skips = parts?.filter(
+    part => part.type !== 'text' || (part.type === 'text' && part.text)
+  )
 
-  if (!skips?.length) return;
+  if (!skips?.length) return
 
   return (
     <motion.div
@@ -41,57 +42,56 @@ export const Message = (message: AIMessage) => {
           }}
           className={cn('flex flex-col gap-4 w-full')}
         >
-          {parts
-            ?.map((part, index) => {
-              const { type } = part
-              const key = `message-${id}-part-${index}`
+          {parts?.map((part, index) => {
+            const { type } = part
+            const key = `message-${id}-part-${index}`
 
-              if (type === 'reasoning') {
-                return part.reasoning
-              }
+            if (type === 'reasoning') {
+              return part.reasoning
+            }
 
-              if (type === 'text' && part.text) {
+            if (type === 'text' && part.text) {
+              return (
+                <div key={key} className="flex flex-row gap-2 items-start">
+                  <div
+                    data-testid="message-content"
+                    className={cn('flex flex-col gap-4', {
+                      'bg-primary text-primary-foreground px-3 py-2 rounded-xl':
+                        role === 'user'
+                    })}
+                  >
+                    <MarkdownRender>{part.text}</MarkdownRender>
+                  </div>
+                </div>
+              )
+            }
+
+            if (type === 'tool-invocation') {
+              const { toolInvocation } = part
+              const { toolName, toolCallId, state } = toolInvocation
+
+              if (state === 'call') {
+                const { args } = toolInvocation
+
                 return (
-                  <div key={key} className="flex flex-row gap-2 items-start">
-                    <div
-                      data-testid="message-content"
-                      className={cn('flex flex-col gap-4', {
-                        'bg-primary text-primary-foreground px-3 py-2 rounded-xl':
-                          role === 'user'
-                      })}
-                    >
-                      <MarkdownRender>{part.text}</MarkdownRender>
-                    </div>
+                  <div
+                    key={toolCallId}
+                    className={cn({
+                      skeleton: ['getWeather'].includes(toolName)
+                    })}
+                  >
+                    {toolName}
                   </div>
                 )
               }
 
-              if (type === 'tool-invocation') {
-                const { toolInvocation } = part
-                const { toolName, toolCallId, state } = toolInvocation
+              if (state === 'result') {
+                const { result } = toolInvocation
 
-                if (state === 'call') {
-                  const { args } = toolInvocation
-
-                  return (
-                    <div
-                      key={toolCallId}
-                      className={cn({
-                        skeleton: ['getWeather'].includes(toolName)
-                      })}
-                    >
-                      {toolName}
-                    </div>
-                  )
-                }
-
-                if (state === 'result') {
-                  const { result } = toolInvocation
-
-                  return <div key={toolCallId}>{result}</div>
-                }
+                return <div key={toolCallId}>{result}</div>
               }
-            })}
+            }
+          })}
         </motion.div>
       </div>
       {role === 'assistant' && (

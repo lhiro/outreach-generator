@@ -8,12 +8,7 @@ import { ArrowUp, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  useState,
-  CSSProperties,
-  useCallback,
-  memo, useEffect
-} from 'react'
+import { useState, CSSProperties, useCallback, memo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { eventBus } from '@/utils/event'
 

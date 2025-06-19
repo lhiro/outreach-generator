@@ -11,8 +11,8 @@ const suggestions = [
 ]
 
 export const useSuggestionTab = (props: {
-  onTab: (placeholder: string) => void;
-  input: string;
+  onTab: (placeholder: string) => void
+  input: string
   loading?: boolean
 }) => {
   const [tabStyle, setTabStyle] = useState<CSSProperties>({ opacity: 0 })
@@ -22,12 +22,12 @@ export const useSuggestionTab = (props: {
   const initTabStyle = () => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    if (!ctx) return;
+    if (!ctx) return
     ctx.font = "14px 'Geist', 'Geist Fallback'"
     const textWidth = ctx.measureText(placeholder).width
     setTabStyle({
       left: `${textWidth + 30}px`,
-      opacity: 1,
+      opacity: 1
     })
     canvas.remove()
   }
@@ -88,5 +88,4 @@ export const useSuggestionTab = (props: {
     handleTab,
     placeholder
   }
-
 }

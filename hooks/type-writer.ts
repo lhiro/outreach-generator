@@ -1,19 +1,19 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 interface TypingEffectOptions {
-  speed?: number;
-  deleteSpeed?: number;
-  delay?: number;
-  enableDelete?: boolean;
-  pauseAfterTyping?: number;
-  complete?: () => void;
-  deleteComplete?: () => void;
-  manual?: boolean;
-  randomSpeed?: boolean;
-  calcDelay?: (text: string) => number;
-  onTyping?: () => void;
-  onDeleteStart?: () => void;
-  [key: string]: any;
+  speed?: number
+  deleteSpeed?: number
+  delay?: number
+  enableDelete?: boolean
+  pauseAfterTyping?: number
+  complete?: () => void
+  deleteComplete?: () => void
+  manual?: boolean
+  randomSpeed?: boolean
+  calcDelay?: (text: string) => number
+  onTyping?: () => void
+  onDeleteStart?: () => void
+  [key: string]: any
 }
 
 /**
@@ -34,96 +34,113 @@ export const useTypingEffect = (
   text: string,
   options: TypingEffectOptions = {}
 ) => {
-  const [typingText, setTypingText] = useState('');
-  const [typing, setTyping] = useState(!options.manual);
-  const charIndexRef = useRef(0);
-  const isDeletingRef = useRef(false);
-  const timerRef = useRef<NodeJS.Timeout>(null);
+  const [typingText, setTypingText] = useState('')
+  const [typing, setTyping] = useState(!options.manual)
+  const charIndexRef = useRef(0)
+  const isDeletingRef = useRef(false)
+  const timerRef = useRef<NodeJS.Timeout>(null)
 
-  const optionsRef = useRef(options);
+  const optionsRef = useRef(options)
   useEffect(() => {
-    optionsRef.current = options;
-  }, [options]);
+    optionsRef.current = options
+  }, [options])
 
-  const start = useCallback((action?: string) => {
-    const currentOptions = optionsRef.current;
-    currentOptions?.onTyping?.();
+  const start = useCallback(
+    (action?: string) => {
+      const currentOptions = optionsRef.current
+      currentOptions?.onTyping?.()
 
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    if (!action) {
-      setTyping(true);
-    }
-
-    const typeNextChar = () => {
-      if (!isDeletingRef.current && charIndexRef.current < text?.length) {
-        setTypingText(text.substring(0, charIndexRef.current + 1));
-        charIndexRef.current += 1;
-
-        const currentSpeed = currentOptions.randomSpeed
-          ? Math.max(
-            (currentOptions.speed as number) * (0.1 + Math.random()),
-            20
-          )
-          : (currentOptions.speed as number);
-
-        timerRef.current = setTimeout(
-          () => typeNextChar(),
-          currentSpeed + (currentOptions?.pauseAfterTyping as number)
-        );
-      } else if (isDeletingRef.current && charIndexRef.current > 0 && currentOptions.enableDelete) {
-        if (charIndexRef.current === text?.length) {
-          currentOptions?.onDeleteStart?.()
-        }
-        setTypingText(text.substring(0, charIndexRef.current - 1));
-        charIndexRef.current -= 1;
-        timerRef.current = setTimeout(() => typeNextChar(), currentOptions.deleteSpeed);
-      } else if (charIndexRef.current === text?.length && !isDeletingRef.current) {
-        isDeletingRef.current = true;
-        const calcDelay = currentOptions?.calcDelay?.(text) || currentOptions.delay;
-        timerRef.current = setTimeout(() => typeNextChar(), calcDelay);
-        if (currentOptions.complete) {
-          setTyping(false);
-          currentOptions.complete();
-        }
-      } else if (isDeletingRef.current && charIndexRef.current === 0) {
-        isDeletingRef.current = false;
-        timerRef.current = setTimeout(() => typeNextChar(), currentOptions.speed);
-        if (currentOptions.deleteComplete) currentOptions.deleteComplete();
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
       }
-    };
 
-    typeNextChar();
-  }, [text]);
+      if (!action) {
+        setTyping(true)
+      }
+
+      const typeNextChar = () => {
+        if (!isDeletingRef.current && charIndexRef.current < text?.length) {
+          setTypingText(text.substring(0, charIndexRef.current + 1))
+          charIndexRef.current += 1
+
+          const currentSpeed = currentOptions.randomSpeed
+            ? Math.max(
+                (currentOptions.speed as number) * (0.1 + Math.random()),
+                20
+              )
+            : (currentOptions.speed as number)
+
+          timerRef.current = setTimeout(
+            () => typeNextChar(),
+            currentSpeed + (currentOptions?.pauseAfterTyping as number)
+          )
+        } else if (
+          isDeletingRef.current &&
+          charIndexRef.current > 0 &&
+          currentOptions.enableDelete
+        ) {
+          if (charIndexRef.current === text?.length) {
+            currentOptions?.onDeleteStart?.()
+          }
+          setTypingText(text.substring(0, charIndexRef.current - 1))
+          charIndexRef.current -= 1
+          timerRef.current = setTimeout(
+            () => typeNextChar(),
+            currentOptions.deleteSpeed
+          )
+        } else if (
+          charIndexRef.current === text?.length &&
+          !isDeletingRef.current
+        ) {
+          isDeletingRef.current = true
+          const calcDelay =
+            currentOptions?.calcDelay?.(text) || currentOptions.delay
+          timerRef.current = setTimeout(() => typeNextChar(), calcDelay)
+          if (currentOptions.complete) {
+            setTyping(false)
+            currentOptions.complete()
+          }
+        } else if (isDeletingRef.current && charIndexRef.current === 0) {
+          isDeletingRef.current = false
+          timerRef.current = setTimeout(
+            () => typeNextChar(),
+            currentOptions.speed
+          )
+          if (currentOptions.deleteComplete) currentOptions.deleteComplete()
+        }
+      }
+
+      typeNextChar()
+    },
+    [text]
+  )
 
   const reset = useCallback(() => {
     if (timerRef.current) {
-      clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current)
     }
-    charIndexRef.current = 0;
-    isDeletingRef.current = false;
-    setTypingText('');
-    setTyping(false);
-  }, []);
+    charIndexRef.current = 0
+    isDeletingRef.current = false
+    setTypingText('')
+    setTyping(false)
+  }, [])
 
   useEffect(() => {
     if (!options.manual) {
-      start();
+      start()
     }
 
     return () => {
       if (timerRef.current) {
-        clearTimeout(timerRef.current);
+        clearTimeout(timerRef.current)
       }
-    };
-  }, [start, options.manual]);
+    }
+  }, [start, options.manual])
 
   return {
     typingText,
     start,
     reset,
-    typing,
-  };
-};
+    typing
+  }
+}

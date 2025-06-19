@@ -13,6 +13,4 @@ eventBus.on = (eventName, ...args): (() => void) => {
     eventBus.off(eventName, ...args)
   }
 }
-export {
-  eventBus
-}
+export { eventBus }

@@ -51,6 +51,7 @@ app.openapi(agent, async c => {
       linkedin: ${clientData?.linkedinUrl}
   `
 
+  console.log('conversation id -> ', id)
   const chatId = await db.query.conversations.findFirst({
     where: eq(conversations.id, id)
   })
@@ -93,7 +94,7 @@ app.openapi(agent, async c => {
 
       db.insert(clients)
         .values({
-          id: `client-${generateId(32)}`,
+          id: generateId(32),
           userId: 'public',
           name: clientData?.name || 'unknown',
           role: clientData?.role || 'unknown',

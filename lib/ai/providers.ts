@@ -9,6 +9,5 @@ const openai = createOpenAI({
 export const provider = customProvider({
   languageModels: {
     chat: openai('gpt-4o-mini')
-    // chat: openai('grok-3')
   }
 })

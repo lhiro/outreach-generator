@@ -22,7 +22,11 @@ export const FloatBtn = () => {
       <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button className="rounded-full" size="icon" onClick={() => setConversationOpened(true)}>
+            <Button
+              className="rounded-full"
+              size="icon"
+              onClick={() => setConversationOpened(true)}
+            >
               <HistoryIcon />
             </Button>
           </TooltipTrigger>

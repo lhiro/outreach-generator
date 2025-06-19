@@ -44,7 +44,6 @@ interface LeadFormProps {
 }
 
 export const LeadForm = (props: LeadFormProps) => {
-
   const form = useForm<LeadFormValues>({
     resolver: zodResolver(leadFormSchema),
     defaultValues: {
@@ -75,7 +74,7 @@ export const LeadForm = (props: LeadFormProps) => {
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
-                  <FormDescription>{'The lead\'s full name'}</FormDescription>
+                  <FormDescription>{"The lead's full name"}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

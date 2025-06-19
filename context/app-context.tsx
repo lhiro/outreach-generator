@@ -20,23 +20,25 @@ export const AppContext = createContext<AppContextType>({
   resetConversationId: () => {}
 })
 
-export const AppContextProvider = (props: {
-  children: ReactNode
-}) => {
+export const AppContextProvider = (props: { children: ReactNode }) => {
   const [conversationOpened, setConversationOpened] = useState(false)
-  const [currentConversationId, setCurrentConversationId] = useState<string | null>(generateId(16))
+  const [currentConversationId, setCurrentConversationId] = useState<
+    string | null
+  >(generateId(16))
   const resetConversationId = useCallback(() => {
     setCurrentConversationId(generateId(16))
   }, [])
 
   return (
-    <AppContext.Provider value={{
-      conversationOpened,
-      setConversationOpened,
-      currentConversationId,
-      setCurrentConversationId,
-      resetConversationId
-    }}>
+    <AppContext.Provider
+      value={{
+        conversationOpened,
+        setConversationOpened,
+        currentConversationId,
+        setCurrentConversationId,
+        resetConversationId
+      }}
+    >
       {props.children}
     </AppContext.Provider>
   )

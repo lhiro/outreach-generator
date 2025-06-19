@@ -60,7 +60,8 @@ export const Content = () => {
     onFinish: () => {
       eventBus.emit('ChatInput:reset')
     },
-    onError() {
+    onError(err) {
+      console.error(err)
       toast.error('Ops, something went wrong')
       eventBus.emit('ChatInput:reset')
     }

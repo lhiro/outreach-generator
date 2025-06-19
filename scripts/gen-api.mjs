@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { generateApi } from 'swagger-typescript-api'
 
-const outputDir = path.resolve(process.cwd(), './api/client')
+const outputDir = path.resolve(process.cwd(), './api/client/gen')
 generateApi({
   url: 'http://localhost:3000/doc',
   silent: true,
@@ -21,18 +21,18 @@ generateApi({
   hooks: {
     onParseSchema: (originalSchema, parsedSchema) => {
       if (
-        originalSchema.type === "string" &&
-        ["date", "date-time"].includes(originalSchema.format ?? "")
+        originalSchema.type === 'string' &&
+        ['date', 'date-time'].includes(originalSchema.format ?? '')
       ) {
-        parsedSchema.content = "Date";
+        parsedSchema.content = 'Date'
       }
-      return parsedSchema;
-    },
-  },
+      return parsedSchema
+    }
+  }
 }).then(({ files }) => {
   const nameMap = {
     ApiRoute: 'types',
-    'data-contracts': 'model',
+    'data-contracts': 'model'
   }
   files.forEach(({ fileContent, fileName, fileExtension }) => {
     let modifiedContent = fileContent
@@ -46,6 +46,9 @@ generateApi({
       .replace('D extends unknown', 'D')
       .replace('E extends unknown = unknown', 'E')
       .replace('SecurityDataType extends unknown', 'SecurityDataType')
-    fs.writeFileSync(path.join(outputDir, (nameMap[fileName] || fileName) + fileExtension), modifiedContent)
+    fs.writeFileSync(
+      path.join(outputDir, (nameMap[fileName] || fileName) + fileExtension),
+      modifiedContent
+    )
   })
 })
